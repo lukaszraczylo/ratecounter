@@ -10,14 +10,14 @@ import (
 // A RateCounter is a thread-safe counter which returns the number of times
 // 'Incr' has been called in the last interval
 type RateCounter struct {
+	onStop     func(r *RateCounter)
+	partials   []Counter
 	counter    Counter
 	interval   time.Duration
 	resolution int
-	partials   []Counter
+	onStopLock sync.RWMutex
 	current    int32
 	running    int32
-	onStop     func(r *RateCounter)
-	onStopLock sync.RWMutex
 }
 
 // NewRateCounter Constructs a new RateCounter, for the interval provided
